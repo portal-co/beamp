@@ -7,5 +7,5 @@ license = "MIT"
 description = "BEAM file parsers and encoders"
 repository = "https://github.com/portal-co/beamp.git"
 
-[workspace.depenedncies]
+[workspace.dependencies]
 
