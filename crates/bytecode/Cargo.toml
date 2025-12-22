@@ -1,0 +1,17 @@
+[package]
+name = "beamcode"
+version = "0.1.0"
+edition = "2021"
+authors = ["Takeru Ohta <phjgt308@gmail.com>"]
+license.workspace = true
+description.workspace = true
+[dependencies]
+beamcode_derive = { path = "../bytecode_derive", version = "0.1.0" }
+byteorder = "1"
+num = "0.4"
+thiserror = "1"
+
+[dev-dependencies]
+anyhow = "1"
+beam_file = "0.3"
+clap = { version = "3", features = ["derive"] }

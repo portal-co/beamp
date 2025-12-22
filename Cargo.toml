@@ -1,0 +1,11 @@
+[workspace]
+members=["crates/bytecode","crates/beam","crates/bytecode_derive"]
+resolver="3"
+
+[workspace.package]
+license = "MIT"
+description = "BEAM file parsers and encoders"
+
+
+[workspace.depenedncies]
+

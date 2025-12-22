@@ -1,0 +1,18 @@
+[package]
+name = "beamcode_derive"
+version = "0.1.0"
+edition = "2021"
+authors = ["Takeru Ohta <phjgt308@gmail.com>"]
+license.workspace = true
+description.workspace = true
+homepage = "https://github.com/sile/beamcode"
+repository = "https://github.com/sile/beamcode"
+readme = "README.md"
+
+[lib]
+proc-macro = true
+
+[dependencies]
+proc-macro2 = "1"
+quote = "1"
+syn = "1"
