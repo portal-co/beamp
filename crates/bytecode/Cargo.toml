@@ -7,10 +7,11 @@ license.workspace = true
 description.workspace = true
 repository.workspace = true
 [dependencies]
-beamcode_derive = { path = "../bytecode_derive", version = "0.1.0" }
-byteorder = "1"
+beamcode_derive.workspace = true
+thiserror.workspace = true
+byteorder.workspace = true
 num = "0.4"
-thiserror = "1"
+
 
 [dev-dependencies]
 anyhow = "1"

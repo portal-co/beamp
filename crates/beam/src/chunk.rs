@@ -149,7 +149,7 @@ impl Chunk for AtomChunk {
 }
 
 /// A representation of the `"Code"` chunk.
-#[derive(Debug, PartialEq, Eq)]
+#[derive(Debug, PartialEq, Eq, Clone)]
 pub struct CodeChunk {
     /// Length of the information fields before code.
     pub info_size: u32,
@@ -168,6 +168,24 @@ pub struct CodeChunk {
 
     /// The byte code.
     pub bytecode: Vec<u8>,
+}
+#[cfg(feature = "bytecode")]
+impl CodeChunk {
+    /// Decodes the bytecode into BEAM instructions.
+    pub fn decode_instructions(
+        &self,
+    ) -> std::result::Result<Vec<beamcode::instruction::Instruction>, beamcode::DecodeError> {
+        beamcode::decode_instructions(&self.bytecode)
+    }
+
+    /// Encodes BEAM instructions into bytecode and updates the chunk's bytecode.
+    pub fn encode_instructions(
+        &mut self,
+        instructions: &[beamcode::instruction::Instruction],
+    ) -> std::result::Result<(), beamcode::EncodeError> {
+        self.bytecode = beamcode::encode_instructions(instructions)?;
+        Ok(())
+    }
 }
 impl Chunk for CodeChunk {
     fn id(&self) -> &Id {

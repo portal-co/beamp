@@ -8,6 +8,11 @@ description.workspace = true
 repository.workspace = true
 
 [dependencies]
-thiserror = "^1"
-byteorder = "1.2"
+thiserror.workspace = true
+byteorder.workspace = true
 libflate = "^1"
+
+beamcode = {workspace=true,optional=true}
+
+[features]
+bytecode=["dep:beamcode"]

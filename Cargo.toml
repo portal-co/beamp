@@ -8,4 +8,7 @@ description = "BEAM file parsers and encoders"
 repository = "https://github.com/portal-co/beamp.git"
 
 [workspace.dependencies]
-
+beamcode = { path = "crates/bytecode", version = "0.1.0"}
+beamcode_derive = { path = "crates/bytecode_derive", version = "0.1.0" }
+thiserror = "^1"
+byteorder = "1.2"
