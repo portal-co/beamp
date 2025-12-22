@@ -1,5 +1,5 @@
-use beamcode::instruction::Instruction;
-use beamcode::Decode;
+use portal_solutions_beamcode::instruction::Instruction;
+use portal_solutions_beamcode::Decode;
 use clap::Parser;
 
 #[derive(Parser)]
@@ -12,7 +12,7 @@ fn main() -> anyhow::Result<()> {
     let beam = beam_file::StandardBeamFile::from_file(&args.beam_file_path)?;
     for chunk in beam.chunks {
         if let beam_file::chunk::StandardChunk::Code(chunk) = chunk {
-            let instructions = beamcode::decode_instructions(&chunk.bytecode)?;
+            let instructions = portal_solutions_beamcode::decode_instructions(&chunk.bytecode)?;
             let mut reader = &chunk.bytecode[..];
             for (i, instruction) in instructions.into_iter().enumerate() {
                 let start = chunk.bytecode.len() - reader.len();
@@ -20,7 +20,7 @@ fn main() -> anyhow::Result<()> {
                 let end = chunk.bytecode.len() - reader.len();
                 let expected = &chunk.bytecode[start..end];
 
-                let encoded = beamcode::encode_instructions(&[instruction.clone()])?;
+                let encoded = portal_solutions_beamcode::encode_instructions(&[instruction.clone()])?;
                 assert_eq!(encoded, expected, "[{}] {:?}", i, instruction);
             }
             return Ok(());

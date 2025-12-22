@@ -1,6 +1,6 @@
 [package]
-name = "beamcode"
-version = "0.1.0"
+name = "portal_solutions_beamcode"
+version.workspace = true
 edition = "2021"
 authors = ["Takeru Ohta <phjgt308@gmail.com>"]
 license.workspace = true

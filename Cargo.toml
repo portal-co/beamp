@@ -6,9 +6,11 @@ resolver="3"
 license = "MIT"
 description = "BEAM file parsers and encoders"
 repository = "https://github.com/portal-co/beamp.git"
+version = "0.2.0"
 
 [workspace.dependencies]
-beamcode = { path = "crates/bytecode", version = "0.1.0"}
-beamcode_derive = { path = "crates/bytecode_derive", version = "0.1.0" }
+beamcode = { path = "crates/bytecode", version = "0.2.0", package = "portal_solutions_beamcode" }
+beamcode_derive = { path = "crates/bytecode_derive", version = "0.2.0", package = "portal_solutions_beamcode_derive" }
+beam_file = { path = "crates/beam", version = "0.2.0", package = "portal_solutions_beam_file" }
 thiserror = "^1"
 byteorder = "1.2"

@@ -33,11 +33,11 @@ checksum = "c08606f8c3cbf4ce6ec8e28fb0014a2c086708fe954eaa885384a6165172e7e8"
 
 [[package]]
 name = "beam_file"
-version = "0.3.1"
+version = "0.2.0"
 dependencies = [
- "beamcode",
  "byteorder",
  "libflate",
+ "portal_solutions_beamcode",
  "thiserror",
 ]
 
@@ -50,28 +50,6 @@ dependencies = [
  "byteorder",
  "libflate",
  "thiserror",
-]
-
-[[package]]
-name = "beamcode"
-version = "0.1.0"
-dependencies = [
- "anyhow",
- "beam_file 0.3.1 (registry+https://github.com/rust-lang/crates.io-index)",
- "beamcode_derive",
- "byteorder",
- "clap",
- "num",
- "thiserror",
-]
-
-[[package]]
-name = "beamcode_derive"
-version = "0.1.0"
-dependencies = [
- "proc-macro2",
- "quote",
- "syn 1.0.109",
 ]
 
 [[package]]
@@ -281,6 +259,28 @@ name = "os_str_bytes"
 version = "6.6.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "e2355d85b9a3786f481747ced0e0ff2ba35213a1f9bd406ed906554d7af805a1"
+
+[[package]]
+name = "portal_solutions_beamcode"
+version = "0.2.0"
+dependencies = [
+ "anyhow",
+ "beam_file 0.3.1",
+ "byteorder",
+ "clap",
+ "num",
+ "portal_solutions_beamcode_derive",
+ "thiserror",
+]
+
+[[package]]
+name = "portal_solutions_beamcode_derive"
+version = "0.2.0"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn 1.0.109",
+]
 
 [[package]]
 name = "proc-macro-error"
