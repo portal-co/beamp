@@ -5,9 +5,8 @@ edition = "2021"
 authors = ["Takeru Ohta <phjgt308@gmail.com>"]
 license.workspace = true
 description.workspace = true
-homepage = "https://github.com/sile/beamcode"
-repository = "https://github.com/sile/beamcode"
-readme = "README.md"
+repository.workspace = true
+
 
 [lib]
 proc-macro = true

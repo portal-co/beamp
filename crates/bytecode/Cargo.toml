@@ -5,6 +5,7 @@ edition = "2021"
 authors = ["Takeru Ohta <phjgt308@gmail.com>"]
 license.workspace = true
 description.workspace = true
+repository.workspace = true
 [dependencies]
 beamcode_derive = { path = "../bytecode_derive", version = "0.1.0" }
 byteorder = "1"
