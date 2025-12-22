@@ -1,0 +1,7 @@
+{
+    "name": "@portal-solutions/beamp",
+    "workspaces": [],
+    "version": "0.1.0",
+    "license": "MIT",
+    "description": "BEAM file parsers and encoders"
+}

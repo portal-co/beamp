@@ -33,16 +33,6 @@ checksum = "c08606f8c3cbf4ce6ec8e28fb0014a2c086708fe954eaa885384a6165172e7e8"
 
 [[package]]
 name = "beam_file"
-version = "0.2.0"
-dependencies = [
- "byteorder",
- "libflate",
- "portal_solutions_beamcode",
- "thiserror",
-]
-
-[[package]]
-name = "beam_file"
 version = "0.3.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "77c1153572b16a3aa4df0afe05fb0043a0ec7464c43c2a54b3b25675dee18ddb"
@@ -261,11 +251,21 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "e2355d85b9a3786f481747ced0e0ff2ba35213a1f9bd406ed906554d7af805a1"
 
 [[package]]
+name = "portal_solutions_beam_file"
+version = "0.2.0"
+dependencies = [
+ "byteorder",
+ "libflate",
+ "portal_solutions_beamcode",
+ "thiserror",
+]
+
+[[package]]
 name = "portal_solutions_beamcode"
 version = "0.2.0"
 dependencies = [
  "anyhow",
- "beam_file 0.3.1",
+ "beam_file",
  "byteorder",
  "clap",
  "num",
