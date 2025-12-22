@@ -1,10 +1,10 @@
-use beam_file::chunk;
-use beam_file::chunk::Chunk;
-use beam_file::parts;
-use beam_file::BeamFile;
-use beam_file::RawBeamFile;
-use beam_file::Result;
-use beam_file::StandardBeamFile;
+use portal_solutions_beam_file::chunk;
+use portal_solutions_beam_file::chunk::Chunk;
+use portal_solutions_beam_file::parts;
+use portal_solutions_beam_file::BeamFile;
+use portal_solutions_beam_file::RawBeamFile;
+use portal_solutions_beam_file::Result;
+use portal_solutions_beam_file::StandardBeamFile;
 use std::fs::File;
 use std::io::Read;
 use std::io::Write;
@@ -32,7 +32,7 @@ fn raw_chunks() {
 
 #[test]
 fn standard_chunks() {
-    use beam_file::chunk::StandardChunk::*;
+    use portal_solutions_beam_file::chunk::StandardChunk::*;
     macro_rules! find_chunk {
         ($beam:expr, $chunk:ident) => {
             $beam
