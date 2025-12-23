@@ -1,5 +1,0 @@
-error: key with no value, expected `=`
- --> Cargo.toml:1:2
-  |
-1 | \[workspace]
-  |  ^
