@@ -1,5 +1,5 @@
 [workspace]
-members=["crates/bytecode","crates/beam","crates/bytecode_derive"]
+members=["crates/core/bytecode","crates/core/beam","crates/core/bytecode_derive"]
 resolver="3"
 
 [workspace.package]
@@ -9,8 +9,8 @@ repository = "https://github.com/portal-co/beamp.git"
 version = "0.2.0"
 
 [workspace.dependencies]
-beamcode = { path = "crates/bytecode", version = "0.2.0", package = "portal_solutions_beamcode" }
-beamcode_derive = { path = "crates/bytecode_derive", version = "0.2.0", package = "portal_solutions_beamcode_derive" }
-beam_file = { path = "crates/beam", version = "0.2.0", package = "portal_solutions_beam_file" }
+beamcode = { path = "crates/core/bytecode", version = "0.2.0", package = "portal_solutions_beamcode" }
+beamcode_derive = { path = "crates/core/bytecode_derive", version = "0.2.0", package = "portal_solutions_beamcode_derive" }
+beam_file = { path = "crates/core/beam", version = "0.2.0", package = "portal_solutions_beam_file" }
 thiserror = "^1"
 byteorder = "1.2"
