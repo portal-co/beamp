@@ -10,6 +10,8 @@ use byteorder::ReadBytesExt as _;
 use num::BigInt;
 use std::io::{Read, Write};
 
+pub use offsets::FromOffset;
+
 pub mod instruction;
 pub mod term;
 
@@ -64,12 +66,14 @@ pub enum EncodeError {
 }
 
 /// Decodes BEAM instructions.
-pub fn decode_instructions(bytecode: &[u8]) -> Result<Vec<Instruction>, DecodeError> {
+pub fn decode_instructions<Off: FromOffset<usize>>(bytecode: &[u8]) -> Result<Vec<(Off, Instruction)>, DecodeError> {
     let mut reader = bytecode;
     let mut instructions = Vec::new();
+    let start_len = reader.len();
     while !reader.is_empty() {
+        let offset = start_len - reader.len();
         let instruction = Instruction::decode(&mut reader)?;
-        instructions.push(instruction);
+        instructions.push((Off::from_offset(offset), instruction));
     }
     Ok(instructions)
 }

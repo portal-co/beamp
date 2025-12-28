@@ -1,0 +1,10 @@
+[package]
+name = "portal_solutions_offset"
+version.workspace = true
+edition = "2021"
+authors = ["Takeru Ohta <phjgt308@gmail.com>"]
+license.workspace = true
+description.workspace = true
+repository.workspace = true
+
+[dependencies]

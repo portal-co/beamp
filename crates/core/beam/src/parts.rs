@@ -18,7 +18,10 @@ pub type ExternalTermFormatBinary = Vec<u8>;
 #[derive(Debug, PartialEq, Eq)]
 pub struct Atom {
     pub name: String,
+    /// Offset (byte) of this atom within its chunk
+    pub offset: usize,
 }
+
 
 /// An imported function.
 #[derive(Debug, PartialEq, Eq)]
@@ -26,7 +29,10 @@ pub struct Import {
     pub module: AtomId,
     pub function: AtomId,
     pub arity: Arity,
+    /// Offset (byte) of this import entry within its chunk
+    pub offset: usize,
 }
+
 
 /// An exported function.
 #[derive(Debug, PartialEq, Eq)]
@@ -34,7 +40,10 @@ pub struct Export {
     pub function: AtomId,
     pub arity: Arity,
     pub label: u32,
+    /// Offset (byte) of this export entry within its chunk
+    pub offset: usize,
 }
+
 
 /// A local function.
 #[derive(Debug, PartialEq, Eq)]
@@ -42,7 +51,10 @@ pub struct Local {
     pub function: AtomId,
     pub arity: Arity,
     pub label: u32,
+    /// Offset (byte) of this local entry within its chunk
+    pub offset: usize,
 }
+
 
 /// An anonymous function.
 #[derive(Debug, PartialEq, Eq)]
@@ -53,4 +65,6 @@ pub struct Function {
     pub index: u32,
     pub num_free: u32,
     pub old_uniq: u32,
+    /// Offset (byte) of this function entry within its chunk
+    pub offset: usize,
 }

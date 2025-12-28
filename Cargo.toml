@@ -1,5 +1,5 @@
 [workspace]
-members=["crates/core/bytecode","crates/core/beam","crates/core/bytecode_derive"]
+members=["crates/core/bytecode","crates/core/beam","crates/core/bytecode_derive","crates/core/offset"]
 resolver="3"
 
 [workspace.package]
@@ -12,5 +12,6 @@ version = "0.2.0"
 beamcode = { path = "crates/core/bytecode", version = "0.2.0", package = "portal_solutions_beamcode" }
 beamcode_derive = { path = "crates/core/bytecode_derive", version = "0.2.0", package = "portal_solutions_beamcode_derive" }
 beam_file = { path = "crates/core/beam", version = "0.2.0", package = "portal_solutions_beam_file" }
+offsets = { path = "crates/core/offset", version = "0.2.0", package = "portal_solutions_offset" }
 thiserror = "^1"
 byteorder = "1.2"

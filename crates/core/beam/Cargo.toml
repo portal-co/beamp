@@ -10,6 +10,7 @@ repository.workspace = true
 [dependencies]
 thiserror.workspace = true
 byteorder.workspace = true
+offsets.workspace = true
 libflate = "^1"
 
 beamcode = {workspace=true,optional=true}

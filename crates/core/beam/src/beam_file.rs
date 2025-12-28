@@ -9,8 +9,8 @@ use crate::{Error, Result};
 /// A BEAM File
 ///
 /// ```
-/// use beam_file::BeamFile;
-/// use beam_file::chunk::{Chunk, RawChunk};
+/// use portal_solutions_beam_file::BeamFile;
+/// use portal_solutions_beam_file::chunk::{Chunk, RawChunk};
 ///
 /// let beam = BeamFile::<RawChunk>::from_file("tests/testdata/test.beam").unwrap();
 /// assert_eq!(b"Atom", beam.chunks.iter().nth(0).map(|c| c.id()).unwrap());

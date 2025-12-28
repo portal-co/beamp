@@ -7,7 +7,7 @@
 //! [BEAM]: http://rnyingma.synrc.com/publications/cat/Functional%20Languages/Erlang/BEAM.pdf
 use byteorder::{BigEndian, ReadBytesExt, WriteBytesExt};
 use libflate::zlib;
-use std::io::{Cursor, Read, Write};
+use std::io::{Cursor, Read, Write, Seek, SeekFrom};
 use std::str;
 
 use crate::parts;
@@ -22,7 +22,7 @@ pub trait Chunk {
     fn id(&self) -> &Id;
 
     /// Reads a chunk from `reader`.
-    fn decode<R: Read>(mut reader: R) -> Result<Self>
+    fn decode<R: Read + Seek>(mut reader: R) -> Result<Self>
     where
         Self: Sized,
     {
@@ -39,7 +39,7 @@ pub trait Chunk {
     /// Reads a chunk which has the identifier `id` from `reader`.
     ///
     /// NOTICE: `reader` has no chunk header (i.e., the identifier and data size of the chunk).
-    fn decode_data<R: Read>(id: &Id, reader: R) -> Result<Self>
+    fn decode_data<R: Read + Seek>(id: &Id, reader: R) -> Result<Self>
     where
         Self: Sized;
 
@@ -78,7 +78,7 @@ impl Chunk for RawChunk {
     fn id(&self) -> &Id {
         &self.id
     }
-    fn decode_data<R: Read>(id: &Id, mut reader: R) -> Result<Self>
+    fn decode_data<R: Read + Seek>(id: &Id, mut reader: R) -> Result<Self>
     where
         Self: Sized,
     {
@@ -108,7 +108,7 @@ impl Chunk for AtomChunk {
             b"Atom"
         }
     }
-    fn decode_data<R: Read>(id: &Id, mut reader: R) -> Result<Self>
+    fn decode_data<R: Read + Seek>(id: &Id, mut reader: R) -> Result<Self>
     where
         Self: Sized,
     {
@@ -123,6 +123,7 @@ impl Chunk for AtomChunk {
         let count = reader.read_u32::<BigEndian>()? as usize;
         let mut atoms = Vec::with_capacity(count);
         for _ in 0..count {
+            let offset = reader.seek(SeekFrom::Current(0))? as usize;
             let len = reader.read_u8()? as usize;
             let mut buf = vec![0; len];
             reader.read_exact(&mut buf)?;
@@ -130,6 +131,7 @@ impl Chunk for AtomChunk {
             let name = str::from_utf8(&buf).map(|s| s.to_string())?;
             atoms.push(parts::Atom {
                 name: name.to_string(),
+                offset,
             });
         }
         Ok(AtomChunk {
@@ -174,8 +176,8 @@ impl CodeChunk {
     /// Decodes the bytecode into BEAM instructions.
     pub fn decode_instructions(
         &self,
-    ) -> std::result::Result<Vec<beamcode::instruction::Instruction>, beamcode::DecodeError> {
-        beamcode::decode_instructions(&self.bytecode)
+    ) -> std::result::Result<Vec<(usize, beamcode::instruction::Instruction)>, beamcode::DecodeError> {
+        beamcode::decode_instructions::<usize>(&self.bytecode)
     }
 
     /// Encodes BEAM instructions into bytecode and updates the chunk's bytecode.
@@ -191,7 +193,7 @@ impl Chunk for CodeChunk {
     fn id(&self) -> &Id {
         b"Code"
     }
-    fn decode_data<R: Read>(id: &Id, mut reader: R) -> Result<Self>
+    fn decode_data<R: Read + Seek>(id: &Id, mut reader: R) -> Result<Self>
     where
         Self: Sized,
     {
@@ -228,7 +230,7 @@ impl Chunk for StrTChunk {
     fn id(&self) -> &Id {
         b"StrT"
     }
-    fn decode_data<R: Read>(id: &Id, mut reader: R) -> Result<Self>
+    fn decode_data<R: Read + Seek>(id: &Id, mut reader: R) -> Result<Self>
     where
         Self: Sized,
     {
@@ -253,7 +255,7 @@ impl Chunk for ImpTChunk {
     fn id(&self) -> &Id {
         b"ImpT"
     }
-    fn decode_data<R: Read>(id: &Id, mut reader: R) -> Result<Self>
+    fn decode_data<R: Read + Seek>(id: &Id, mut reader: R) -> Result<Self>
     where
         Self: Sized,
     {
@@ -261,10 +263,15 @@ impl Chunk for ImpTChunk {
         let count = reader.read_u32::<BigEndian>()? as usize;
         let mut imports = Vec::with_capacity(count);
         for _ in 0..count {
+            let offset = reader.seek(SeekFrom::Current(0))? as usize;
+            let module = reader.read_u32::<BigEndian>()?;
+            let function = reader.read_u32::<BigEndian>()?;
+            let arity = reader.read_u32::<BigEndian>()?;
             imports.push(parts::Import {
-                module: reader.read_u32::<BigEndian>()?,
-                function: reader.read_u32::<BigEndian>()?,
-                arity: reader.read_u32::<BigEndian>()?,
+                module,
+                function,
+                arity,
+                offset,
             });
         }
         Ok(ImpTChunk { imports })
@@ -290,7 +297,7 @@ impl Chunk for ExpTChunk {
     fn id(&self) -> &Id {
         b"ExpT"
     }
-    fn decode_data<R: Read>(id: &Id, mut reader: R) -> Result<Self>
+    fn decode_data<R: Read + Seek>(id: &Id, mut reader: R) -> Result<Self>
     where
         Self: Sized,
     {
@@ -298,10 +305,15 @@ impl Chunk for ExpTChunk {
         let count = reader.read_u32::<BigEndian>()? as usize;
         let mut exports = Vec::with_capacity(count);
         for _ in 0..count {
+            let offset = reader.seek(SeekFrom::Current(0))? as usize;
+            let function = reader.read_u32::<BigEndian>()?;
+            let arity = reader.read_u32::<BigEndian>()?;
+            let label = reader.read_u32::<BigEndian>()?;
             exports.push(parts::Export {
-                function: reader.read_u32::<BigEndian>()?,
-                arity: reader.read_u32::<BigEndian>()?,
-                label: reader.read_u32::<BigEndian>()?,
+                function,
+                arity,
+                label,
+                offset,
             });
         }
         Ok(ExpTChunk { exports })
@@ -330,7 +342,7 @@ impl Chunk for LitTChunk {
     fn id(&self) -> &Id {
         b"LitT"
     }
-    fn decode_data<R: Read>(id: &Id, mut reader: R) -> Result<Self>
+    fn decode_data<R: Read + Seek>(id: &Id, mut reader: R) -> Result<Self>
     where
         Self: Sized,
     {
@@ -376,7 +388,7 @@ impl Chunk for LocTChunk {
     fn id(&self) -> &Id {
         b"LocT"
     }
-    fn decode_data<R: Read>(id: &Id, mut reader: R) -> Result<Self>
+    fn decode_data<R: Read + Seek>(id: &Id, mut reader: R) -> Result<Self>
     where
         Self: Sized,
     {
@@ -384,10 +396,15 @@ impl Chunk for LocTChunk {
         let count = reader.read_u32::<BigEndian>()? as usize;
         let mut locals = Vec::with_capacity(count);
         for _ in 0..count {
+            let offset = reader.seek(SeekFrom::Current(0))? as usize;
+            let function = reader.read_u32::<BigEndian>()?;
+            let arity = reader.read_u32::<BigEndian>()?;
+            let label = reader.read_u32::<BigEndian>()?;
             locals.push(parts::Local {
-                function: reader.read_u32::<BigEndian>()?,
-                arity: reader.read_u32::<BigEndian>()?,
-                label: reader.read_u32::<BigEndian>()?,
+                function,
+                arity,
+                label,
+                offset,
             });
         }
         Ok(LocTChunk { locals })
@@ -413,7 +430,7 @@ impl Chunk for FunTChunk {
     fn id(&self) -> &Id {
         b"FunT"
     }
-    fn decode_data<R: Read>(id: &Id, mut reader: R) -> Result<Self>
+    fn decode_data<R: Read + Seek>(id: &Id, mut reader: R) -> Result<Self>
     where
         Self: Sized,
     {
@@ -421,13 +438,21 @@ impl Chunk for FunTChunk {
         let count = reader.read_u32::<BigEndian>()? as usize;
         let mut functions = Vec::with_capacity(count);
         for _ in 0..count {
+            let offset = reader.seek(SeekFrom::Current(0))? as usize;
+            let function = reader.read_u32::<BigEndian>()?;
+            let arity = reader.read_u32::<BigEndian>()?;
+            let label = reader.read_u32::<BigEndian>()?;
+            let index = reader.read_u32::<BigEndian>()?;
+            let num_free = reader.read_u32::<BigEndian>()?;
+            let old_uniq = reader.read_u32::<BigEndian>()?;
             functions.push(parts::Function {
-                function: reader.read_u32::<BigEndian>()?,
-                arity: reader.read_u32::<BigEndian>()?,
-                label: reader.read_u32::<BigEndian>()?,
-                index: reader.read_u32::<BigEndian>()?,
-                num_free: reader.read_u32::<BigEndian>()?,
-                old_uniq: reader.read_u32::<BigEndian>()?,
+                function,
+                arity,
+                label,
+                index,
+                num_free,
+                old_uniq,
+                offset,
             });
         }
         Ok(FunTChunk { functions })
@@ -461,7 +486,7 @@ impl Chunk for AttrChunk {
     fn id(&self) -> &Id {
         b"Attr"
     }
-    fn decode_data<R: Read>(id: &Id, mut reader: R) -> Result<Self>
+    fn decode_data<R: Read + Seek>(id: &Id, mut reader: R) -> Result<Self>
     where
         Self: Sized,
     {
@@ -491,7 +516,7 @@ impl Chunk for CInfChunk {
     fn id(&self) -> &Id {
         b"CInf"
     }
-    fn decode_data<R: Read>(id: &Id, mut reader: R) -> Result<Self>
+    fn decode_data<R: Read + Seek>(id: &Id, mut reader: R) -> Result<Self>
     where
         Self: Sized,
     {
@@ -520,7 +545,7 @@ impl Chunk for AbstChunk {
     fn id(&self) -> &Id {
         b"Abst"
     }
-    fn decode_data<R: Read>(id: &Id, mut reader: R) -> Result<Self>
+    fn decode_data<R: Read + Seek>(id: &Id, mut reader: R) -> Result<Self>
     where
         Self: Sized,
     {
@@ -559,7 +584,7 @@ impl Chunk for DbgiChunk {
     fn id(&self) -> &Id {
         b"Dbgi"
     }
-    fn decode_data<R: Read>(id: &Id, mut reader: R) -> Result<Self>
+    fn decode_data<R: Read + Seek>(id: &Id, mut reader: R) -> Result<Self>
     where
         Self: Sized,
     {
@@ -609,7 +634,7 @@ impl Chunk for DocsChunk {
     fn id(&self) -> &Id {
         b"Docs"
     }
-    fn decode_data<R: Read>(id: &Id, mut reader: R) -> Result<Self>
+    fn decode_data<R: Read + Seek>(id: &Id, mut reader: R) -> Result<Self>
     where
         Self: Sized,
     {
@@ -627,8 +652,8 @@ impl Chunk for DocsChunk {
 /// A representation of commonly used chunk.
 ///
 /// ```
-/// use beam_file::BeamFile;
-/// use beam_file::chunk::{Chunk, StandardChunk};
+/// use portal_solutions_beam_file::BeamFile;
+/// use portal_solutions_beam_file::chunk::{Chunk, StandardChunk};
 ///
 /// let beam = BeamFile::<StandardChunk>::from_file("tests/testdata/test.beam").unwrap();
 /// assert_eq!(b"Atom", beam.chunks.iter().nth(0).map(|c| c.id()).unwrap());
@@ -670,7 +695,7 @@ impl Chunk for StandardChunk {
             Unknown(ref c) => c.id(),
         }
     }
-    fn decode_data<R: Read>(id: &Id, reader: R) -> Result<Self>
+    fn decode_data<R: Read + Seek>(id: &Id, reader: R) -> Result<Self>
     where
         Self: Sized,
     {

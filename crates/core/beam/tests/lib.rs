@@ -8,6 +8,7 @@ use portal_solutions_beam_file::StandardBeamFile;
 use std::fs::File;
 use std::io::Read;
 use std::io::Write;
+use std::io::Seek;
 use std::path::PathBuf;
 
 #[test]
@@ -191,7 +192,7 @@ impl chunk::Chunk for EncodeTestChunk {
             Other(ref c) => c.id(),
         }
     }
-    fn decode_data<R: Read>(id: &chunk::Id, reader: R) -> Result<Self>
+    fn decode_data<R: Read + Seek>(id: &chunk::Id, reader: R) -> Result<Self>
     where
         Self: Sized,
     {

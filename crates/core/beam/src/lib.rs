@@ -5,8 +5,8 @@
 //! Collects ID of chunks in a BEAM file:
 //!
 //! ```
-//! use beam_file::StandardBeamFile;
-//! use beam_file::chunk::Chunk;
+//! use portal_solutions_beam_file::StandardBeamFile;
+//! use portal_solutions_beam_file::chunk::Chunk;
 //!
 //! let beam = StandardBeamFile::from_file("tests/testdata/test.beam").unwrap();
 //!
@@ -18,8 +18,8 @@
 //! Generates a BEAM file:
 //!
 //! ```
-//! use beam_file::RawBeamFile;
-//! use beam_file::chunk::{Chunk, RawChunk};
+//! use portal_solutions_beam_file::RawBeamFile;
+//! use portal_solutions_beam_file::chunk::{Chunk, RawChunk};
 //!
 //! let chunk = RawChunk{id: *b"Atom", data: Vec::new()}; // NOTICE: The chunk is malformed
 //! let beam = RawBeamFile{chunks: vec![chunk]};
@@ -29,6 +29,8 @@
 mod beam_file;
 pub mod chunk;
 pub mod parts;
+
+pub use offsets::FromOffset;
 
 pub use crate::beam_file::BeamFile;
 pub type RawBeamFile = BeamFile<chunk::RawChunk>;

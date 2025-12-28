@@ -12,9 +12,9 @@ fn main() -> anyhow::Result<()> {
     let beam = beam_file::StandardBeamFile::from_file(&args.beam_file_path)?;
     for chunk in beam.chunks {
         if let beam_file::chunk::StandardChunk::Code(chunk) = chunk {
-            let instructions = portal_solutions_beamcode::decode_instructions(&chunk.bytecode)?;
+            let instructions = portal_solutions_beamcode::decode_instructions::<usize>(&chunk.bytecode)?;
             let mut reader = &chunk.bytecode[..];
-            for (i, instruction) in instructions.into_iter().enumerate() {
+            for (i, (_off, instruction)) in instructions.into_iter().enumerate() {
                 let start = chunk.bytecode.len() - reader.len();
                 let _ = Instruction::decode(&mut reader)?;
                 let end = chunk.bytecode.len() - reader.len();

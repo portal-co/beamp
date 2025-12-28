@@ -257,6 +257,7 @@ dependencies = [
  "byteorder",
  "libflate",
  "portal_solutions_beamcode",
+ "portal_solutions_offset",
  "thiserror",
 ]
 
@@ -270,6 +271,7 @@ dependencies = [
  "clap",
  "num",
  "portal_solutions_beamcode_derive",
+ "portal_solutions_offset",
  "thiserror",
 ]
 
@@ -281,6 +283,10 @@ dependencies = [
  "quote",
  "syn 1.0.109",
 ]
+
+[[package]]
+name = "portal_solutions_offset"
+version = "0.2.0"
 
 [[package]]
 name = "proc-macro-error"

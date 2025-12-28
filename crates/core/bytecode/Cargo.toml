@@ -10,6 +10,7 @@ repository.workspace = true
 beamcode_derive.workspace = true
 thiserror.workspace = true
 byteorder.workspace = true
+offsets.workspace = true
 num = "0.4"
 
 
