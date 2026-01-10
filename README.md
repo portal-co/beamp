@@ -1,13 +1,15 @@
 # @portal-solutions/beamp
 
 ## Description
-BEAM file parsers and encoders
+Parsers and encoders for the BEAM file format (Erlang VM bytecode).
 
 ## Goals
-- [ ] Add project goals
+- [ ] Parse BEAM files
+- [ ] Encode/Generate BEAM files
+- [ ] Support bytecode operations
 
 ## Progress
-- [ ] Initial setup
+- [ ] Workspace setup with core crates (`beamcode`, `beam_file`)
 
 ---
 *AI assisted*
