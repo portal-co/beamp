@@ -22,7 +22,6 @@ pub struct Atom {
     pub offset: usize,
 }
 
-
 /// An imported function.
 #[derive(Debug, PartialEq, Eq)]
 pub struct Import {
@@ -32,7 +31,6 @@ pub struct Import {
     /// Offset (byte) of this import entry within its chunk
     pub offset: usize,
 }
-
 
 /// An exported function.
 #[derive(Debug, PartialEq, Eq)]
@@ -44,7 +42,6 @@ pub struct Export {
     pub offset: usize,
 }
 
-
 /// A local function.
 #[derive(Debug, PartialEq, Eq)]
 pub struct Local {
@@ -54,7 +51,6 @@ pub struct Local {
     /// Offset (byte) of this local entry within its chunk
     pub offset: usize,
 }
-
 
 /// An anonymous function.
 #[derive(Debug, PartialEq, Eq)]

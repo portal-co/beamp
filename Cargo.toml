@@ -1,6 +1,11 @@
 [workspace]
-members=["crates/core/bytecode","crates/core/beam","crates/core/bytecode_derive","crates/core/offset"]
-resolver="3"
+members = [
+    "crates/core/bytecode",
+    "crates/core/beam",
+    "crates/core/bytecode_derive",
+    "crates/core/offset",
+]
+resolver = "3"
 
 [workspace.package]
 license = "MIT"

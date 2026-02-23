@@ -66,7 +66,9 @@ pub enum EncodeError {
 }
 
 /// Decodes BEAM instructions.
-pub fn decode_instructions<Off: FromOffset<usize>>(bytecode: &[u8]) -> Result<Vec<(Off, Instruction)>, DecodeError> {
+pub fn decode_instructions<Off: FromOffset<usize>>(
+    bytecode: &[u8],
+) -> Result<Vec<(Off, Instruction)>, DecodeError> {
     let mut reader = bytecode;
     let mut instructions = Vec::new();
     let start_len = reader.len();

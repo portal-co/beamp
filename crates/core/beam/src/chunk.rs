@@ -7,7 +7,7 @@
 //! [BEAM]: http://rnyingma.synrc.com/publications/cat/Functional%20Languages/Erlang/BEAM.pdf
 use byteorder::{BigEndian, ReadBytesExt, WriteBytesExt};
 use libflate::zlib;
-use std::io::{Cursor, Read, Write, Seek, SeekFrom};
+use std::io::{Cursor, Read, Seek, SeekFrom, Write};
 use std::str;
 
 use crate::parts;
@@ -176,7 +176,8 @@ impl CodeChunk {
     /// Decodes the bytecode into BEAM instructions.
     pub fn decode_instructions(
         &self,
-    ) -> std::result::Result<Vec<(usize, beamcode::instruction::Instruction)>, beamcode::DecodeError> {
+    ) -> std::result::Result<Vec<(usize, beamcode::instruction::Instruction)>, beamcode::DecodeError>
+    {
         beamcode::decode_instructions::<usize>(&self.bytecode)
     }
 

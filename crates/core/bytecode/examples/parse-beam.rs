@@ -10,7 +10,9 @@ fn main() -> anyhow::Result<()> {
     let beam = beam_file::StandardBeamFile::from_file(&args.beam_file_path)?;
     for chunk in beam.chunks {
         if let beam_file::chunk::StandardChunk::Code(chunk) = chunk {
-            for (_off, instruction) in portal_solutions_beamcode::decode_instructions::<usize>(&chunk.bytecode)? {
+            for (_off, instruction) in
+                portal_solutions_beamcode::decode_instructions::<usize>(&chunk.bytecode)?
+            {
                 println!("{:?}", instruction);
             }
             return Ok(());

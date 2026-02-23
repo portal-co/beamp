@@ -7,8 +7,8 @@ use portal_solutions_beam_file::Result;
 use portal_solutions_beam_file::StandardBeamFile;
 use std::fs::File;
 use std::io::Read;
-use std::io::Write;
 use std::io::Seek;
+use std::io::Write;
 use std::path::PathBuf;
 
 #[test]
